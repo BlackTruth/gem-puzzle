@@ -16,40 +16,49 @@ body {
 .game-area__timer {
 }
 
-.game-area__puzzle_3 {
+.game-area__puzzle{
   display: grid;
-  grid-template-columns: auto auto auto;
+  width: 40%;
+  grid-auto-rows: 1fr;
   background-color: #437299;
+}
+
+
+.game-area__puzzle::before {
+  content: '';
+  width: 0;
+  padding-bottom: 100%;
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+.game-area__puzzle > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+.game-area__puzzle_3 {
+  grid-template-columns: auto auto auto;
 }
 
 .game-area__puzzle_4 {
-  display: grid;
   grid-template-columns: auto auto auto auto;
-  background-color: #437299;
 }
 
 .game-area__puzzle_5 {
-  display: grid;
   grid-template-columns: auto auto auto auto auto;
-  background-color: #437299;
 }
 
 .game-area__puzzle_6 {
-  display: grid;
   grid-template-columns: auto auto auto auto auto auto;
-  background-color: #437299;
 }
 
 .game-area__puzzle_7 {
-  display: grid;
   grid-template-columns: auto auto auto auto auto auto auto;
-  background-color: #437299;
 }
 
 .game-area__puzzle_8 {
-  display: grid;
   grid-template-columns: auto auto auto auto auto auto auto auto;
-  background-color: #437299;
 }
 
 .game-area__options {
@@ -61,16 +70,30 @@ body {
 }
 
 .game-area__puzzle__puzzle-cell {
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.8);
+  position: relative;
+  background-color: rgb(136, 69, 69);
+  outline: solid 2px rgb(60, 17, 100);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+.game-area__puzzle__puzzle-cell-cover {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  background-color: rgb(255, 255, 255);
   padding: 20px;
   font-size: 30px;
   text-align: center;
 }
 
 .game-area__puzzle__puzzle-cell_empty {
-  background-color: rgba(136, 69, 69, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.8);
+  background-color: rgb(136, 69, 69);
+  outline: solid 2px rgb(60, 17, 100);
   padding: 20px;
   font-size: 30px;
   text-align: center;
@@ -86,4 +109,41 @@ body {
   margin: 0 5px;
   cursor: pointer;
   color: blue;
+}
+
+@keyframes moveleft {
+  from {
+    left: 0
+  }
+  to {
+    left: -100%;
+  }
+}
+
+@keyframes moveright {
+  from {
+    left: 0
+  }
+  to {
+    left: 100%;
+  }
+}
+
+
+@keyframes moveup {
+  from {
+    top: 0
+  }
+  to {
+    top: -100%;
+  }
+}
+
+@keyframes movedown {
+  from {
+    top: 0
+  }
+  to {
+    top: 100%;
+  }
 }
