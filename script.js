@@ -143,19 +143,8 @@ function drawGrid(dimension) {
       puzzleCellCover.remove();
     } else {
       let move;
-      let canBeDrag;
-      // puzzleCell.addEventListener("click", (e) => {
-      //   if (!_DEFAULT_VALUES.gameInProgress) return;
-      //   move = getMove(puzzleCell, dimension);
-      //   if (!move) return;
-      //   if (animationEnd) {
-      //     animationEnd = false;
-      //     puzzleCellCover.style.animation = `move${move.direction} 0.3s ease`;
-      //   }
-      // });
 
       let onAnimationEnd = () => {
-        console.log("end animation");
         puzzleCellCover.style.animation = "";
         let itemParent = move.element.parentElement;
         itemParent.insertBefore(move.empty, move.next);
@@ -183,18 +172,18 @@ function drawGrid(dimension) {
         if (!_DEFAULT_VALUES.gameInProgress || !animationEnd) return;
         move = getMove(puzzleCell, dimension);
         if (!move) return;
-        console.log(e.pageX, e.pageY);
 
         let mouseMove = (moveE) => {
           if (!_DEFAULT_VALUES.gameInProgress) return;
           switch (move.direction) {
             case "up":
-              if (moveE.pageY < e.pageY)
+              if (moveE.pageY < e.pageY) {
                 puzzleCellCover.style.top =
                   Math.min(
                     puzzleCellCover.clientWidth + 2,
                     moveE.pageY - e.pageY
                   ) + "px";
+              }
               break;
             case "down":
               if (moveE.pageY > e.pageY) {
@@ -206,20 +195,22 @@ function drawGrid(dimension) {
               }
               break;
             case "left":
-              if (moveE.pageX < e.pageX)
+              if (moveE.pageX < e.pageX) {
                 puzzleCellCover.style.left =
                   Math.min(
                     puzzleCellCover.clientWidth + 2,
                     moveE.pageX - e.pageX
                   ) + "px";
+              }
               break;
             case "right":
-              if (moveE.pageX > e.pageX)
+              if (moveE.pageX > e.pageX) {
                 puzzleCellCover.style.left =
                   Math.min(
                     puzzleCellCover.clientWidth + 2,
                     moveE.pageX - e.pageX
                   ) + "px";
+              }
               break;
             default:
               break;
@@ -235,51 +226,80 @@ function drawGrid(dimension) {
           ) {
             animationEnd = false;
             puzzleCellCover.style.animation = `move${move.direction} 0.3s ease`;
-            // let animationEndClick = () => {
-            //     onAnimationEnd();
-            //     puzzleCellCover.removeEventListener('animationend',animationEndClick);
-            // }
           } else {
-            let moveAnimation;
+            let jsAnimation;
             switch (move.direction) {
               case "up":
-                moveAnimation = [
-                  { top: puzzleCellCover.style.top },
-                  { top: "-100%" },
-                ];
+                jsAnimation = setInterval(() => {
+                  let top = parseInt(
+                    puzzleCellCover.style.top.substring(
+                      0,
+                      puzzleCellCover.style.top.length - 2
+                    )
+                  );
+                  if (top > -puzzleCellCover.clientWidth - 2) {
+                    puzzleCellCover.style.top = top - 1 + "px";
+                  } else {
+                    clearInterval(jsAnimation);
+                    onAnimationEnd();
+                    puzzleCellCover.style.top = "0px";
+                  }
+                }, 2);
                 break;
               case "down":
-                moveAnimation = [
-                  { top: puzzleCellCover.style.top },
-                  { top: "100%" },
-                ];
-                break;
-              case "left":
-                moveAnimation = [
-                  { left: puzzleCellCover.style.left },
-                  { left: "-100%" },
-                ];
+                jsAnimation = setInterval(() => {
+                  let top = parseInt(
+                    puzzleCellCover.style.top.substring(
+                      0,
+                      puzzleCellCover.style.top.length - 2
+                    )
+                  );
+                  if (top < puzzleCellCover.clientWidth + 2) {
+                    puzzleCellCover.style.top = top + 1 + "px";
+                  } else {
+                    clearInterval(jsAnimation);
+                    onAnimationEnd();
+                    puzzleCellCover.style.top = "0px";
+                  }
+                }, 2);
                 break;
               case "right":
-                moveAnimation = [
-                  { left: puzzleCellCover.style.left },
-                  { left: "100%" },
-                ];
+                jsAnimation = setInterval(() => {
+                  let left = parseInt(
+                    puzzleCellCover.style.left.substring(
+                      0,
+                      puzzleCellCover.style.left.length - 2
+                    )
+                  );
+                  if (left < puzzleCellCover.clientWidth + 2) {
+                    puzzleCellCover.style.left = left + 1 + "px";
+                  } else {
+                    clearInterval(jsAnimation);
+                    onAnimationEnd();
+                    puzzleCellCover.style.left = "0px";
+                  }
+                }, 2);
+                break;
+              case "left":
+                jsAnimation = setInterval(() => {
+                  let left = parseInt(
+                    puzzleCellCover.style.left.substring(
+                      0,
+                      puzzleCellCover.style.left.length - 2
+                    )
+                  );
+                  if (left > -puzzleCellCover.clientWidth - 2) {
+                    puzzleCellCover.style.left = left - 1 + "px";
+                  } else {
+                    clearInterval(jsAnimation);
+                    onAnimationEnd();
+                    puzzleCellCover.style.left = "0px";
+                  }
+                }, 2);
                 break;
               default:
                 break;
             }
-            puzzleCellCover.animate(moveAnimation, {
-              // timing options
-              duration: 300,
-            });
-            puzzleCellCover.style.top = "0px";
-            puzzleCellCover.style.left = "0px";
-            setTimeout(() => {
-              puzzleCellCover.style.top = "0px";
-              puzzleCellCover.style.left = "0px";
-              onAnimationEnd();
-            }, 300);
           }
         };
 
