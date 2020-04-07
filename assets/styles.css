@@ -41,6 +41,10 @@ body {
   background-color: #437299;
 }
 
+.game-area__puzzle_hide {
+  display: none;
+}
+
 .game-area__puzzle::before {
   content: "";
   width: 0;
