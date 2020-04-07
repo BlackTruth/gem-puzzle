@@ -12,14 +12,26 @@ body {
   width: 100%;
 }
 .game-area__buttons {
-  margin: 5px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 60%;
+  margin: 0 auto;
 }
 
 .game-area__buttons__button {
   margin: 0 5px;
+  flex: 1;
   color: white;
   background-color: rgb(113, 113, 241);
+  border: 1px solid silver;
+  padding: 10px 2px;
 }
+
+.game-area__buttons__button:disabled {
+  background-color: grey;
+}
+
 .game-area__timer {
   display: flex;
   visibility: hidden;
@@ -99,6 +111,8 @@ body {
 }
 .game-area__puzzle__puzzle-cell-cover {
   position: absolute;
+  cursor: pointer;
+  user-select: none;
   z-index: 1;
   width: calc(100% - 2px);
   height: calc(100% - 2px);
@@ -166,3 +180,46 @@ body {
     top: 100%;
   }
 }
+
+@media only screen and (max-width: 1019px){
+  .game-area__puzzle{
+    width: 80%;
+  }
+  .game-area__buttons{
+    width: 80%;
+  }
+
+} 
+
+@media only screen and (max-width: 767px){
+  .game-area__puzzle{
+    width: 98%;
+  }
+  .game-area__puzzle__puzzle-cell-cover{
+    font-size: 20px;
+  }
+  .game-area__buttons{
+    width: 98%;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .game-area__buttons__button{
+    font-size: 11px;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+    width: 49%;
+    flex: none;
+  }
+  .game-area__puzzle__puzzle-cell {
+    padding: 10px;
+  }
+  .game-area__puzzle__puzzle-cell-cover {
+    padding: 10px;
+  }
+  
+  .game-area__puzzle__puzzle-cell_empty {
+    padding: 10px;
+  }
+} 

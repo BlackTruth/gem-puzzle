@@ -50,6 +50,7 @@ saveButton.classList.add(
   "game-area__buttons__button_save"
 );
 saveButton.innerText = "Сохранить";
+saveButton.disabled = !_DEFAULT_VALUES.gameInProgress;
 buttons.appendChild(saveButton);
 
 saveButton.addEventListener("click", saveGame);
@@ -142,18 +143,19 @@ function drawGrid(dimension) {
       puzzleCellCover.remove();
     } else {
       let move;
+      let canBeDrag;
+      // puzzleCell.addEventListener("click", (e) => {
+      //   if (!_DEFAULT_VALUES.gameInProgress) return;
+      //   move = getMove(puzzleCell, dimension);
+      //   if (!move) return;
+      //   if (animationEnd) {
+      //     animationEnd = false;
+      //     puzzleCellCover.style.animation = `move${move.direction} 0.3s ease`;
+      //   }
+      // });
 
-      puzzleCell.addEventListener("click", (e) => {
-        if (!_DEFAULT_VALUES.gameInProgress) return;
-        move = getMove(puzzleCell, dimension);
-        if (!move) return;
-        if (animationEnd) {
-          animationEnd = false;
-          puzzleCellCover.style.animation = `move${move.direction} 0.3s ease`;
-        }
-      });
-
-      puzzleCellCover.addEventListener("animationend", () => {
+      let onAnimationEnd = () => {
+        console.log("end animation");
         puzzleCellCover.style.animation = "";
         let itemParent = move.element.parentElement;
         itemParent.insertBefore(move.empty, move.next);
@@ -175,6 +177,116 @@ function drawGrid(dimension) {
           }, 0);
           saveResult(elapsedTime, _DEFAULT_VALUES.steps);
         }
+      };
+
+      puzzleCell.addEventListener("mousedown", (e) => {
+        if (!_DEFAULT_VALUES.gameInProgress || !animationEnd) return;
+        move = getMove(puzzleCell, dimension);
+        if (!move) return;
+        console.log(e.pageX, e.pageY);
+
+        let mouseMove = (moveE) => {
+          if (!_DEFAULT_VALUES.gameInProgress) return;
+          switch (move.direction) {
+            case "up":
+              if (moveE.pageY < e.pageY)
+                puzzleCellCover.style.top =
+                  Math.min(
+                    puzzleCellCover.clientWidth + 2,
+                    moveE.pageY - e.pageY
+                  ) + "px";
+              break;
+            case "down":
+              if (moveE.pageY > e.pageY) {
+                puzzleCellCover.style.top =
+                  Math.min(
+                    puzzleCellCover.clientWidth + 2,
+                    moveE.pageY - e.pageY
+                  ) + "px";
+              }
+              break;
+            case "left":
+              if (moveE.pageX < e.pageX)
+                puzzleCellCover.style.left =
+                  Math.min(
+                    puzzleCellCover.clientWidth + 2,
+                    moveE.pageX - e.pageX
+                  ) + "px";
+              break;
+            case "right":
+              if (moveE.pageX > e.pageX)
+                puzzleCellCover.style.left =
+                  Math.min(
+                    puzzleCellCover.clientWidth + 2,
+                    moveE.pageX - e.pageX
+                  ) + "px";
+              break;
+            default:
+              break;
+          }
+        };
+
+        let mouseUp = (upE) => {
+          puzzleCell.removeEventListener("mousemove", mouseMove);
+          puzzleCell.removeEventListener("mouseup", mouseUp);
+          if (
+            Math.abs(e.pageY - upE.pageY) < 3 &&
+            Math.abs(e.pageX - upE.pageX) < 3
+          ) {
+            animationEnd = false;
+            puzzleCellCover.style.animation = `move${move.direction} 0.3s ease`;
+            // let animationEndClick = () => {
+            //     onAnimationEnd();
+            //     puzzleCellCover.removeEventListener('animationend',animationEndClick);
+            // }
+          } else {
+            let moveAnimation;
+            switch (move.direction) {
+              case "up":
+                moveAnimation = [
+                  { top: puzzleCellCover.style.top },
+                  { top: "-100%" },
+                ];
+                break;
+              case "down":
+                moveAnimation = [
+                  { top: puzzleCellCover.style.top },
+                  { top: "100%" },
+                ];
+                break;
+              case "left":
+                moveAnimation = [
+                  { left: puzzleCellCover.style.left },
+                  { left: "-100%" },
+                ];
+                break;
+              case "right":
+                moveAnimation = [
+                  { left: puzzleCellCover.style.left },
+                  { left: "100%" },
+                ];
+                break;
+              default:
+                break;
+            }
+            puzzleCellCover.animate(moveAnimation, {
+              // timing options
+              duration: 300,
+            });
+            puzzleCellCover.style.top = "0px";
+            puzzleCellCover.style.left = "0px";
+            setTimeout(() => {
+              puzzleCellCover.style.top = "0px";
+              puzzleCellCover.style.left = "0px";
+              onAnimationEnd();
+            }, 300);
+          }
+        };
+
+        puzzleCell.addEventListener("mousemove", mouseMove);
+
+        puzzleCell.addEventListener("mouseup", mouseUp);
+        puzzleCellCover.addEventListener("animationend", onAnimationEnd);
       });
     }
     puzzle.appendChild(puzzleCell);
@@ -247,6 +359,7 @@ function shuffle(dimension, sortOrder) {
 
 function startGame() {
   _DEFAULT_VALUES.gameInProgress = true;
+  saveButton.disabled = false;
   shuffle(_DEFAULT_VALUES.puzzleDimension);
   _DEFAULT_VALUES.steps = 0;
   stepsCount.innerText = _DEFAULT_VALUES.steps;
@@ -273,6 +386,7 @@ function stopGame() {
   drawGrid(_DEFAULT_VALUES.puzzleDimension);
   timer.classList.remove("game-area__timer_visible");
   _DEFAULT_VALUES.gameInProgress = false;
+  saveButton.disabled = true;
 }
 
 function saveGame() {
