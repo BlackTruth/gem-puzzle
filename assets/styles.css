@@ -12,20 +12,37 @@ body {
   width: 100%;
 }
 .game-area__buttons {
-}
-.game-area__timer {
+  margin: 5px 0;
 }
 
-.game-area__puzzle{
+.game-area__buttons__button {
+  margin: 0 5px;
+  color: white;
+  background-color: rgb(113, 113, 241);
+}
+.game-area__timer {
+  display: flex;
+  visibility: hidden;
+}
+
+.game-area__timer_visible {
+  visibility: visible;
+}
+
+.game-area__timer__inner {
+  display: inline-block;
+  margin: 5px 5px;
+}
+
+.game-area__puzzle {
   display: grid;
   width: 40%;
   grid-auto-rows: 1fr;
   background-color: #437299;
 }
 
-
 .game-area__puzzle::before {
-  content: '';
+  content: "";
   width: 0;
   padding-bottom: 100%;
   grid-row: 1 / 1;
@@ -72,7 +89,6 @@ body {
 .game-area__puzzle__puzzle-cell {
   position: relative;
   background-color: rgb(136, 69, 69);
-  outline: solid 2px rgb(60, 17, 100);
   padding: 20px;
   font-size: 30px;
   text-align: center;
@@ -80,12 +96,13 @@ body {
 .game-area__puzzle__puzzle-cell-cover {
   position: absolute;
   z-index: 1;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
   box-sizing: border-box;
   top: 0;
   left: 0;
   background-color: rgb(255, 255, 255);
+  outline: solid 2px rgb(60, 17, 100);
   padding: 20px;
   font-size: 30px;
   text-align: center;
@@ -93,7 +110,6 @@ body {
 
 .game-area__puzzle__puzzle-cell_empty {
   background-color: rgb(136, 69, 69);
-  outline: solid 2px rgb(60, 17, 100);
   padding: 20px;
   font-size: 30px;
   text-align: center;
@@ -113,7 +129,7 @@ body {
 
 @keyframes moveleft {
   from {
-    left: 0
+    left: 0;
   }
   to {
     left: -100%;
@@ -122,17 +138,16 @@ body {
 
 @keyframes moveright {
   from {
-    left: 0
+    left: 0;
   }
   to {
     left: 100%;
   }
 }
 
-
 @keyframes moveup {
   from {
-    top: 0
+    top: 0;
   }
   to {
     top: -100%;
@@ -141,7 +156,7 @@ body {
 
 @keyframes movedown {
   from {
-    top: 0
+    top: 0;
   }
   to {
     top: 100%;
